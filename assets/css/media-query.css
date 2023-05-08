@@ -26,7 +26,7 @@
 }
 
 /* Height Re-size */
-@media screen and (max-height: 1100px) {
+@media screen and (max-height: 1200px) {
     #game-box {
         height: 980px;
         width: 600px;
@@ -36,7 +36,7 @@
         width: 58px;
     }
 }
-@media screen and (max-height: 1000px) {
+@media screen and (max-height: 1100px) {
     #game-box {
         height: 880px;
         width: 500px;

@@ -7,9 +7,8 @@ const populateGrid = async () => {
     // Main grid
     for (let i = 0; i < 18; i++) {
         const section = document.createElement("section");
-        section.setAttribute("id", `y${i}`);
-        section.classList.add("section");
 
+        section.id = `y${i}`;
         document.getElementById("game-box").appendChild(section);
 
         for (let j = 0; j < 10; j++) {
@@ -22,23 +21,23 @@ const populateGrid = async () => {
 
     // Sub-Grids
     for (let i = 0; i < 5; i++) {
-        const sectionOne = document.createElement("article");
-        sectionOne.setAttribute("id", `next-y${i}`);
-        sectionOne.setAttribute("class", "section");
-        document.getElementById("next").appendChild(sectionOne);
+        const sectionOne = document.createElement("section");
+        const sectionTwo = document.createElement("section");
 
-        const sectionTwo = document.createElement("article");
-        sectionTwo.setAttribute("id", `hold-y${i}`);
-        sectionTwo.setAttribute("class", "section");
+        sectionOne.id = `next-y${i}`;
+        sectionTwo.id = `hold-y${i}`
+
+        document.getElementById("next").appendChild(sectionOne);
         document.getElementById("hold").appendChild(sectionTwo);
 
         for (let j = 0; j < 5; j++) {
             const divOne = document.createElement("div");
-            divOne.setAttribute("class", "small-cell");
-            sectionOne.appendChild(divOne);
-
             const divTwo = document.createElement("div");
-            divTwo.setAttribute("class", "small-cell");
+
+            divOne.classList.add("small-cell");
+            divTwo.classList.add("small-cell");
+
+            sectionOne.appendChild(divOne);
             sectionTwo.appendChild(divTwo);
         }
     }

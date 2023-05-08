@@ -8,7 +8,7 @@
 }
 
 #game-box {
-    border: 3px solid black;
+    border: 2px solid black;
     height: 1080px;
     width: 600px;
 }
@@ -29,13 +29,7 @@ aside h3 {
     font-size: 30px;
 }
 
-.small-grid {
-    border: 3px solid black;
-    height: 150px;
-    width: 150px;
-}
-
-.section {
+section {
     display: flex;
     flex-direction: row;
 }
@@ -44,6 +38,12 @@ aside h3 {
     height: 58px;
     width: 58px;
     border: 1px solid grey;
+}
+
+.small-grid {
+    border: 2px solid black;
+    height: 150px;
+    width: 150px;
 }
 
 .small-cell {
