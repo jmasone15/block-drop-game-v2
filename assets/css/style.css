@@ -1,0 +1,38 @@
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 98vh;
+    width: 98vw;
+}
+
+#game-box {
+    border: 3px solid black;
+    height: 1080px;
+    width: 600px;
+}
+
+aside {
+    border: 3px solid black;
+    height: 150px;
+    width: 150px;
+}
+
+#hold {
+    margin-right: 20px;
+}
+
+#next {
+    margin-left: 20px;
+}
+
+.section {
+    display: flex;
+    flex-direction: row;
+}
+
+.cell {
+    height: 58px;
+    width: 58px;
+    border: 1px solid grey;
+}

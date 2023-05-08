@@ -1,0 +1,48 @@
+/* Width Re-size */
+@media screen and (max-width: 1000px) {
+    aside {
+        display: none;
+    }
+}
+@media screen and (max-width: 675px) {
+    #game-box {
+        height: 980px;
+        width: 500px;
+    }
+    .cell {
+        height: 52.5px;
+        width: 52.5px;
+    }
+}
+@media screen and (max-width: 550px) {
+    #game-box {
+        height: 880px;
+        width: 400px;
+    }
+    .cell {
+        height: 47px;
+        width: 47px;
+    }
+}
+
+/* Height Re-size */
+@media screen and (max-height: 1100px) {
+    #game-box {
+        height: 980px;
+        width: 600px;
+    }
+    .cell {
+        height: 52.5px;
+        width: 58px;
+    }
+}
+@media screen and (max-height: 1000px) {
+    #game-box {
+        height: 880px;
+        width: 500px;
+    }
+    .cell {
+        height: 47px;
+        width: 52.5px;
+    }
+}
