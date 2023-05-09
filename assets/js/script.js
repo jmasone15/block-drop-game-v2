@@ -382,19 +382,16 @@ const determineShadow = () => {
         cell.style.borderColor = "transparent"
     });
 
-    let results = [];
-    let increment = 17;
-
+    let count = 0;
     while (true) {
-        let newPositions = [];
         let canMove = true;
 
         activeShape.boxes.forEach(({x, y}) => {
             let targetX = x;
-            let targetY = y + increment;
+            let targetY = y + count;
 
             // Blocked by borders
-            if (targetX < 0 || targetX > 9 || targetY < 0 || targetY > 17) {
+            if (targetY > 17) {
                 canMove = false;
                 return;
             }
@@ -404,24 +401,21 @@ const determineShadow = () => {
             const targetBox = targetRow.children[targetX];
             const shapeId = targetBox.getAttribute("shapeId");
 
-            if (shapeId === null || parseInt(shapeId) === this.shapeId) {
-                newPositions.push({x: targetX, y: targetY})
-            } else {
+            if (shapeId !== null && parseInt(shapeId) !== activeShape.shapeId) {
                 canMove = false;
             }
         });
 
-        if (!canMove) {
-            increment--;
+        if (canMove) {
+            count++
         } else {
-            results = newPositions;
+            count--
             break;
         }
     }
 
-
-    results.forEach(({x, y}) => {
-       let row = document.getElementById(`y${y}`);
+    activeShape.boxes.forEach(({x, y}) => {
+       let row = document.getElementById(`y${y + count}`);
        row.children[x].style.borderColor = "white";
     });
 }
