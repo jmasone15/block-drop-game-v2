@@ -53,13 +53,9 @@ class Box {
         // Blocked by other shape
         const targetRow = document.getElementById(`y${y}`);
         const targetBox = targetRow.children[x];
+        const shapeId = targetBox.getAttribute("shapeId");
 
-        if (targetBox.classList.length === 1) {
-            return true
-        } else {
-            // Check to see if next location is owned by box within same shape
-            return parseInt(targetBox.getAttribute("shapeId")) === this.shapeId
-        }
+        return shapeId === null || parseInt(shapeId) === this.shapeId
     }
 }
 

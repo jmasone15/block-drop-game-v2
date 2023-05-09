@@ -1,7 +1,6 @@
 // Game Variables
 let userInput = false;
 let activeShape;
-let shapeCounter = 0;
 let allRows = [];
 let shapes = [];
 let score = 0;
@@ -15,8 +14,6 @@ let speedMS = 800;
 let loopCount = 0;
 let incrementLoopCount = false;
 let controlsData = JSON.parse(localStorage.getItem("blockGameControls"));
-let changeControls = false;
-let targetControlChange;
 
 if (!controlsData) {
     controlsData = {
@@ -31,18 +28,8 @@ if (!controlsData) {
     localStorage.setItem("blockGameControls", JSON.stringify(controlsData));
 }
 
-const gameBoxEl = document.getElementById("game-box");
-const holdEl = document.getElementById("hold");
-const nextEl = document.getElementById("next");
-const nextPieceEl = document.getElementById("next-piece");
-const holdPieceEl = document.getElementById("hold-piece");
-const h3El = document.getElementById("h3");
-const levelEl = document.getElementById("level");
+
 const scoreEl = document.getElementById("score");
-const startBtnEl = document.getElementById("btn");
-const controlsEl = document.getElementById("controls");
-const controlsBoxEl = document.getElementById("controls-box");
-const modal = document.getElementById("modal");
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -185,6 +172,7 @@ const displayNextShapes = (i, currentBag, nextBag) => {
 const shapeDrop = async () => {
     // Update the game variables
     activeShape.populateShape(true);
+    determineShadow();
     userInput = true;
     loopCount = 1;
 
@@ -388,6 +376,56 @@ const clearRows = async () => {
     }
 }
 
+const determineShadow = () => {
+    // Reset Shadow
+    [...document.getElementsByClassName("cell")].forEach(cell => {
+        cell.style.borderColor = "transparent"
+    });
+
+    let results = [];
+    let increment = 17;
+
+    while (true) {
+        let newPositions = [];
+        let canMove = true;
+
+        activeShape.boxes.forEach(({x, y}) => {
+            let targetX = x;
+            let targetY = y + increment;
+
+            // Blocked by borders
+            if (targetX < 0 || targetX > 9 || targetY < 0 || targetY > 17) {
+                canMove = false;
+                return;
+            }
+
+            // Blocked by other shape
+            const targetRow = document.getElementById(`y${targetY}`);
+            const targetBox = targetRow.children[targetX];
+            const shapeId = targetBox.getAttribute("shapeId");
+
+            if (shapeId === null || parseInt(shapeId) === this.shapeId) {
+                newPositions.push({x: targetX, y: targetY})
+            } else {
+                canMove = false;
+            }
+        });
+
+        if (!canMove) {
+            increment--;
+        } else {
+            results = newPositions;
+            break;
+        }
+    }
+
+
+    results.forEach(({x, y}) => {
+       let row = document.getElementById(`y${y}`);
+       row.children[x].style.borderColor = "white";
+    });
+}
+
 const game = async () => {
     // Want to generate current bag and next bag to display pieces in "Next" box
     let currentBag = bagGeneration();
@@ -472,6 +510,7 @@ const game = async () => {
 }
 
 const init = async () => {
+    // Change to a start button function
 
     // Instead of coding 180 individual divs, figured it would look cool to populate them incrementally to simulate "loading up" on the old systems.
     // Creates rows and divs for the game grid with a 10 ms delay between each to simulate loading effect.
@@ -481,7 +520,7 @@ const init = async () => {
 
     // Game Loop
     await delay(1000);
-    return game();
+    await game();
 }
 
 document.addEventListener("keydown", (e) => {
@@ -504,6 +543,10 @@ document.addEventListener("keydown", (e) => {
             // Need count of rows for updating score.
             const totalRows = activeShape.moveShape(key, true);
 
+            if (key === leftMoveKey || key === rightMoveKey) {
+                determineShadow();
+            }
+
             // Hard drop has some special features.
             if (key === hardDropKey) {
                 hardDropped = true;
@@ -522,6 +565,7 @@ document.addEventListener("keydown", (e) => {
         } else if ([leftRotateKey, rightRotateKey].includes(key)) {
             // Rotate piece
             activeShape.rotatePiece(key === leftRotateKey ? 1 : 2);
+            determineShadow();
         } else if (key === holdPieceKey) {
             // Hold piece
             if (!hasSwappedHold) {
