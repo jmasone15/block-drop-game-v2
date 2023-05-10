@@ -74,6 +74,17 @@ const unPopulateGrid = async(xCount, yCount, gridId) => {
     }
 }
 
+const durstendfeldShuffle = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        let temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+
+    return array
+}
+
 const bagGeneration = () => {
     let pieces = [new I(5, 0), new J(5, 0), new L(5, 0), new O(5, 0), new S(5, 0), new T(5, 0), new Z(5, 0)];
 
@@ -449,6 +460,18 @@ const resetShadow = () => {
     ghostDivs = [];
 }
 
+const onLoadUI = () => {
+    let randomArrayOne = durstendfeldShuffle([1, 2, 3, 4, 5, 6, 7]);
+    let randomArrayTwo = durstendfeldShuffle([1, 2, 3, 4, 5, 6, 7]);
+
+    [...document.getElementById("text-drop").children].forEach((value, i) => {
+        let index = i > 6 ? randomArrayTwo[i - 7] : randomArrayOne[i];
+        value.style.color = `var(--color-${index})`;
+    });
+
+    document.getElementById("copyright").innerHTML = `&copy; ${new Date().getFullYear()} Copyright: <a href="https://github.com/jmasone15" target="_blank"> Jordan Masone</a>`;
+}
+
 const game = async (existing, existingBag, existingNextBag, index) => {
     let currentBag, nextBag;
 
@@ -556,6 +579,7 @@ const game = async (existing, existingBag, existingNextBag, index) => {
     }
 }
 
+// Event Listeners
 document.addEventListener("keydown", (e) => {
     e.preventDefault();
 
@@ -633,4 +657,5 @@ startBtnEl.addEventListener("click", async () => {
     await delay(1000);
     await game();
 });
-document.getElementById("copyright").innerHTML = `&copy; ${new Date().getFullYear()} Copyright: <a href="https://github.com/jmasone15" target="_blank"> Jordan Masone</a>`;
+
+onLoadUI();

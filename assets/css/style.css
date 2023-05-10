@@ -189,7 +189,7 @@ section {
     color: white;
     margin-left: 20px;
     margin-right: 20px;
-    animation: fadeIn 5s;
+    animation: fadeIn 5.4s;
     transition: all ease-in-out 0.2s;
 }
 
@@ -212,71 +212,63 @@ section {
 #B {
     animation: drop 0.4s linear forwards 1s;
     opacity: 0;
-    color: var(--color-1);
 }
 #l {
     animation: drop 0.4s linear forwards 1.2s;
     opacity: 0;
-    color: var(--color-2);
 }
 #o {
     animation: drop 0.4s linear forwards 1.4s;
     opacity: 0;
-    color: var(--color-3);
 }
 #c {
     animation: drop 0.4s linear forwards 1.6s;
     opacity: 0;
-    color: var(--color-4);
 }
 #k {
     animation: drop 0.4s linear forwards 1.8s;
     opacity: 0;
     margin-right: 20px;
-    color: var(--color-5);
 }
 
 #D {
     animation: drop 0.4s linear forwards 2s;
     opacity: 0;
-    color: var(--color-6);
 }
 #r {
     animation: drop 0.4s linear forwards 2.2s;
     opacity: 0;
-    color: var(--color-7);
 }
 #o2 {
     animation: drop 0.4s linear forwards 2.4s;
     opacity: 0;
-    color: var(--color-1);
 }
 #p {
     animation: drop 0.4s linear forwards 2.6s;
     opacity: 0;
     margin-right: 20px;
-    color: var(--color-2);
 }
 
 #G {
     animation: drop 0.4s linear forwards 2.8s;
     opacity: 0;
-    color: var(--color-3);
 }
 #a {
     animation: drop 0.4s linear forwards 3s;
     opacity: 0;
-    color: var(--color-4);
 }
 #m {
     animation: drop 0.4s linear forwards 3.2s;
     opacity: 0;
-    color: var(--color-5);
 }
 #e {
     animation: drop 0.4s linear forwards 3.4s;
     opacity: 0;
-    color: var(--color-6);
+    margin-right: 20px;
+}
+#smile {
+    animation: drop 0.4s linear forwards 3.6s;
+    opacity: 0;
 }
 
 @keyframes drop {
