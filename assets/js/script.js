@@ -32,7 +32,6 @@ if (!controlsData) {
     localStorage.setItem("blockGameControls", JSON.stringify(controlsData));
 }
 
-
 const scoreEl = document.getElementById("score");
 const highScoreEl = document.getElementById("high-score");
 const modal = document.getElementById("modal");
@@ -634,3 +633,4 @@ startBtnEl.addEventListener("click", async () => {
     await delay(1000);
     await game();
 });
+document.getElementById("copyright").innerHTML = `&copy; ${new Date().getFullYear()} Copyright: <a href="https://github.com/jmasone15" target="_blank"> Jordan Masone</a>`;

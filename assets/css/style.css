@@ -206,6 +206,7 @@ section {
 
 .text-drop h1 {
     font-size: 70px;
+    user-select: none;
 }
 
 #B {
@@ -303,4 +304,17 @@ section {
     100% {
         opacity: 1;
     }
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    color: white;
+}
+
+footer a {
+    text-decoration: none;
+    color: white;
 }
