@@ -15,7 +15,9 @@ let speedMS = 800;
 let loopCount = 0;
 let incrementLoopCount = false;
 let paused = false;
+let ghostDivs = [];
 let controlsData = JSON.parse(localStorage.getItem("blockGameControls"));
+let highScore = localStorage.getItem("high-score");
 
 if (!controlsData) {
     controlsData = {
@@ -32,6 +34,7 @@ if (!controlsData) {
 
 
 const scoreEl = document.getElementById("score");
+const highScoreEl = document.getElementById("high-score");
 const modal = document.getElementById("modal");
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -99,6 +102,11 @@ const endGame = async () => {
     // Remove elements from small side grids.
     await unPopulateGrid(5, 15, "next");
     await unPopulateGrid(5, 5, "hold");
+
+    // Update high-score
+    if (highScore === null || score > parseInt(highScore)) {
+        localStorage.setItem("high-score", score);
+    }
 }
 
 const createShapeByColor = (color) => {
@@ -197,7 +205,8 @@ const shapeDrop = async () => {
         if (activeShape.canShapeMove(controlsData.softDropKey)) {
             activeShape.moveShape(controlsData.softDropKey, false);
         } else {
-            break
+            resetShadow();
+            break;
         }
     }
 
@@ -371,19 +380,25 @@ const clearRows = async () => {
 
         // Update the game variables
         clearedLinesCount += clearedRows.length;
-        score += mod * levelMod;
-        document.getElementById("score").textContent = score;
+        updateScore(mod * levelMod)
 
         // Update the game level based on rows cleared
         return updateLevel();
     }
 }
 
+const updateScore = (amount) => {
+    score += amount;
+    scoreEl.textContent = score;
+
+    if (score > highScore) {
+        highScoreEl.textContent = `New Best! ${score}`;
+    }
+}
+
 const determineShadow = () => {
     // Reset Shadow
-    [...document.getElementsByClassName("cell")].forEach(cell => {
-        cell.style.borderColor = "transparent"
-    });
+    resetShadow();
 
     let count = 0;
     while (true) {
@@ -420,7 +435,15 @@ const determineShadow = () => {
     activeShape.boxes.forEach(({x, y}) => {
        let row = document.getElementById(`y${y + count}`);
        row.children[x].style.borderColor = "white";
+       ghostDivs.push(row.children[x])
     });
+}
+
+const resetShadow = () => {
+    ghostDivs.forEach(cell => {
+        cell.style.borderColor = "transparent"
+    });
+    ghostDivs = [];
 }
 
 const game = async (existing, existingBag, existingNextBag, index) => {
@@ -539,6 +562,8 @@ const init = async () => {
     await populateGrid(5, 5, "hold");
     await populateGrid(10, 18, "game-box");
 
+    highScoreEl.textContent = !highScore ? "" : highScore;
+
     // Game Loop
     await delay(1000);
     await game();
@@ -580,6 +605,7 @@ document.addEventListener("keydown", (e) => {
 
             // Hard drop has some special features.
             if (key === hardDropKey) {
+                resetShadow();
                 hardDropped = true;
                 userInput = false;
                 loopCount = 0;
@@ -589,8 +615,7 @@ document.addEventListener("keydown", (e) => {
 
             // Increment score
             if (totalRows !== 0) {
-                score += totalRows
-                scoreEl.textContent = score
+                updateScore(totalRows);
             }
 
         } else if ([leftRotateKey, rightRotateKey].includes(key)) {
