@@ -13,7 +13,7 @@
     </div>
 </div>
 <header>
-    <div class="header-class">
+    <div class="header-class display-none" id="header">
         <h3 id="lines">Lines: 0</h3>
         <div>
             <h1 id="score">0</h1>
@@ -22,7 +22,7 @@
         <h3 id="level">Level: 1</h3>
     </div>
 </header>
-<div class="wrapper">
+<div class="wrapper display-none" id="game">
     <aside style="margin-right: 50px;">
         <h3>Hold</h3>
         <div id="hold" class="small-grid"></div>
@@ -35,8 +35,30 @@
         <div id="next" class="small-grid"></div>
     </aside>
 </div>
+<div class="start-screen" id="start-screen">
+    <div class="text-drop">
+        <h1 id="B">B</h1>
+        <h1 id="l">l</h1>
+        <h1 id="o">o</h1>
+        <h1 id="c">c</h1>
+        <h1 id="k">k</h1>
+        <h1 id="D">D</h1>
+        <h1 id="r">r</h1>
+        <h1 id="o2">o</h1>
+        <h1 id="p">p</h1>
+        <h1 id="G">G</h1>
+        <h1 id="a">a</h1>
+        <h1 id="m">m</h1>
+        <h1 id="e">e</h1>
+    </div>
+    <div class="icon-div">
+        <i id="start" class="fa-solid fa-play icon"></i>
+        <i id="settings" class="fa-solid fa-gear icon"></i>
+    </div>
+</div>
 
 <script src="assets/js/script.js"></script>
 <script src="./assets/js/classes.js"></script>
+<script src="https://kit.fontawesome.com/319698822a.js" crossorigin="anonymous"></script>
 </body>
 </html>

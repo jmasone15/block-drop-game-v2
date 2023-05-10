@@ -36,6 +36,10 @@ if (!controlsData) {
 const scoreEl = document.getElementById("score");
 const highScoreEl = document.getElementById("high-score");
 const modal = document.getElementById("modal");
+const startBtnEl = document.getElementById("start");
+const startScreenEl = document.getElementById("start-screen");
+const headerEl = document.getElementById("header");
+const wrapperEl = document.getElementById("game");
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -553,22 +557,6 @@ const game = async (existing, existingBag, existingNextBag, index) => {
     }
 }
 
-const init = async () => {
-    // Change to a start button function
-
-    // Instead of coding 180 individual divs, figured it would look cool to populate them incrementally to simulate "loading up" on the old systems.
-    // Creates rows and divs for the game grid with a 10 ms delay between each to simulate loading effect.
-    await populateGrid(5, 15, "next");
-    await populateGrid(5, 5, "hold");
-    await populateGrid(10, 18, "game-box");
-
-    highScoreEl.textContent = !highScore ? "" : highScore;
-
-    // Game Loop
-    await delay(1000);
-    await game();
-}
-
 document.addEventListener("keydown", (e) => {
     e.preventDefault();
 
@@ -630,5 +618,19 @@ document.addEventListener("keydown", (e) => {
         }
     }
 });
+startBtnEl.addEventListener("click", async () => {
+    highScoreEl.textContent = !highScore ? "" : highScore;
+    startScreenEl.classList.add("display-none");
+    headerEl.classList.remove("display-none");
+    wrapperEl.classList.remove("display-none");
 
-init();
+    // Instead of coding 180 individual divs, figured it would look cool to populate them incrementally to simulate "loading up" on the old systems.
+    // Creates rows and divs for the game grid with a 10 ms delay between each to simulate loading effect.
+    await populateGrid(5, 15, "next");
+    await populateGrid(5, 5, "hold");
+    await populateGrid(10, 18, "game-box");
+
+    // Game Loop
+    await delay(1000);
+    await game();
+});
