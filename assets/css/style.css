@@ -332,6 +332,7 @@ footer a {
 .settings-screen h1 {
     color: white;
     margin-bottom: 100px;
+    text-align: center;
 }
 
 .settings-wrapper {

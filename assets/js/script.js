@@ -37,6 +37,7 @@ if (!controlsData) {
 
 const scoreEl = document.getElementById("score");
 const highScoreEl = document.getElementById("high-score");
+const linesClearedEl = document.getElementById("lines");
 const modal = document.getElementById("modal");
 const startBtnEl = document.getElementById("start");
 const startScreenEl = document.getElementById("start-screen");
@@ -422,7 +423,9 @@ const clearRows = async () => {
 
         // Update the game variables
         clearedLinesCount += clearedRows.length;
-        updateScore(mod * levelMod)
+        linesClearedEl.textContent = `Lines: ${clearedLinesCount}`;
+
+        updateScore(mod * levelMod);
 
         // Update the game level based on rows cleared
         return updateLevel();
@@ -812,6 +815,7 @@ settingsEl.addEventListener("click", () => {
           resetGameVariables();
       }
 
+      endScreenEl.classList.add("display-none");
       startScreenEl.classList.remove("display-none");
       settingsScreenEl.classList.add("display-none");
       goBackEl.classList.add("display-none");
@@ -834,9 +838,3 @@ playAgainEl.addEventListener("click", () => {
 });
 
 onLoadUI();
-
-
-// TODO
-// End Game
-// Rotate Start Screen Pieces
-// Performance Enhancements
