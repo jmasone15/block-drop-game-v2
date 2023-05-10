@@ -18,6 +18,9 @@ let paused = false;
 let ghostDivs = [];
 let controlsData = JSON.parse(localStorage.getItem("blockGameControls"));
 let highScore = localStorage.getItem("high-score");
+let gameStart = false;
+let changeControls = false;
+let targetChangeIcon;
 
 if (!controlsData) {
     controlsData = {
@@ -25,7 +28,7 @@ if (!controlsData) {
         rightMoveKey: "ArrowRight",
         softDropKey: "ArrowDown",
         hardDropKey: "ArrowUp",
-        holdPieceKey: "Tab",
+        holdPieceKey: "TAB",
         leftRotateKey: "1",
         rightRotateKey: "2"
     }
@@ -43,6 +46,9 @@ const countdownEl = document.getElementById("countdown");
 const settingsEl = document.getElementById("settings");
 const settingsScreenEl = document.getElementById("settings-screen");
 const goBackEl = document.getElementById("go-back");
+const keyIconEls = [...document.getElementsByTagName("kbd")];
+const copyrightEl = document.getElementById("copyright");
+const settingsInstrucEl = document.getElementById("settings-instructions");
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -104,6 +110,7 @@ const bagGeneration = () => {
 }
 
 const endGame = async () => {
+    gameStart = false;
     await delay(250);
 
     // We want to delete all the rows incrementally, similar to how we populated boxes and rows one at a time.
@@ -473,7 +480,11 @@ const onLoadUI = () => {
         value.style.color = `var(--color-${index})`;
     });
 
-    document.getElementById("copyright").innerHTML = `&copy; ${new Date().getFullYear()} Copyright: <a href="https://github.com/jmasone15" target="_blank"> Jordan Masone</a>`;
+    copyrightEl.innerHTML = `&copy; ${new Date().getFullYear()} Copyright: <a href="https://github.com/jmasone15" target="_blank"> Jordan Masone</a>`;
+
+    for (const control in controlsData) {
+        updateControlKey(controlsData[control], document.getElementById(control))
+    }
 }
 
 const countdown = async () => {
@@ -490,6 +501,54 @@ const countdown = async () => {
     }
 
     countdownEl.classList.add("display-none");
+}
+
+const updateControlKey = (key, element) => {
+    let keyText = key;
+
+    if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(keyText)) {
+        switch (keyText) {
+            case ("ArrowLeft"):
+                keyText = "&larr;"
+                break;
+            case ("ArrowUp"):
+                keyText = "&uarr;"
+                break;
+            case ("ArrowRight"):
+                keyText = "&rarr;"
+                break;
+            default:
+                keyText = "&darr;"
+                break;
+        }
+    } else if (["Control", "Shift", "Backspace", "Enter", "CapsLock", "Alt", "Space"].includes(keyText)) {
+        element.classList.add("kbd-small-text");
+
+        switch (keyText) {
+            case ("Control"):
+                keyText = "CTRL"
+                break;
+            case ("Shift"):
+                keyText = "SHIFT"
+                break;
+            case ("Backspace"):
+                keyText = "BACK"
+                break;
+            case ("Enter"):
+                keyText = "ENTER"
+                break;
+            case ("Space"):
+                keyText = "SPACE"
+                break;
+            default:
+                keyText = "CAPS"
+                break;
+        }
+    } else {
+        keyText = keyText.toUpperCase();
+    }
+
+    element.innerHTML = keyText;
 }
 
 const game = async (existing, existingBag, existingNextBag, index) => {
@@ -607,15 +666,36 @@ document.addEventListener("keydown", (e) => {
     let key = e.key === " " ? "Space" : e.key;
     let { leftMoveKey, rightMoveKey, softDropKey, hardDropKey, leftRotateKey, rightRotateKey, holdPieceKey } = controlsData;
 
-    // If modal is being shown, update the control key the user is trying to change and hide the modal.
-    // if (modal.style.display === "block") {
-    //     controlsData[targetControlChange] = key;
-    //     document.getElementById(targetControlChange).textContent = key;
-    //     localStorage.setItem("blockGameControls", JSON.stringify(controlsData));
-    //     modal.style.display = "none";
-    // }
+    if (changeControls) {
+        // Check to see if target key is already used for another control
+        let isMatchingKey = false;
+        for (const control in controlsData) {
+            if (key === controlsData[control]) {
+                isMatchingKey = true;
+                break;
+            }
+        }
 
-    if (key === "Escape") {
+        if (isMatchingKey) {
+            // Update UI
+            settingsInstrucEl.textContent = "Key is already in use, please try a different key";
+        } else {
+            // Update UI
+            updateControlKey(key, targetChangeIcon);
+            settingsInstrucEl.textContent = "Key bind successfully updated";
+
+            // Update controls
+            controlsData[targetChangeIcon.getAttribute("id")] = key;
+            localStorage.setItem("blockGameControls", JSON.stringify(controlsData));
+        }
+
+        // Reset change variables
+        targetChangeIcon.classList.remove("kbd-active");
+        targetChangeIcon = null;
+        changeControls = false;
+    }
+
+    if (key === "Escape" && gameStart) {
         if (paused) {
             modal.style.display = "none";
             paused = false;
@@ -666,6 +746,8 @@ startBtnEl.addEventListener("click", async () => {
     startScreenEl.classList.add("display-none");
     headerEl.classList.remove("display-none");
     wrapperEl.classList.remove("display-none");
+    copyrightEl.classList.add("display-none");
+    gameStart = true;
 
     // Instead of coding 180 individual divs, figured it would look cool to populate them incrementally to simulate "loading up" on the old systems.
     // Creates rows and divs for the game grid with a 10 ms delay between each to simulate loading effect.
@@ -688,11 +770,19 @@ goBackEl.addEventListener("click", () => {
     settingsScreenEl.classList.add("display-none");
     goBackEl.classList.add("display-none");
 });
+keyIconEls.forEach(keyIcon => {
+    keyIcon.addEventListener("click", () => {
+        keyIcon.classList.add("kbd-active");
+        changeControls = true
+        targetChangeIcon = keyIcon;
+        settingsInstrucEl.textContent = "Press any key..."
+    });
+})
 
 onLoadUI();
 
 
 // TODO
-// Controls
+// Controls - rEFACTOR THE LOGIC FOR THIS
 // Rotate Start Screen Pieces
 // End Game

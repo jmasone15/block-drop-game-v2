@@ -325,12 +325,13 @@ footer a {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 400px;
+    margin-top: 300px;
     width: 100%;
 }
 
 .settings-screen h1 {
     color: white;
+    margin-bottom: 100px;
 }
 
 .settings-wrapper {
@@ -387,9 +388,19 @@ kbd {
 
 kbd:hover {
     color: #f8ff73;
-    box-shadow: 0 0 !important;;
+    box-shadow: 0 0 !important;
     border: 2px solid #f8ff73;
     cursor: pointer;
+}
+
+.kbd-active {
+    color: #f8ff73;
+    box-shadow: 0 0 !important;;
+    border: 2px solid #f8ff73;
+}
+
+.kbd-small-text {
+    font-size: 20px;
 }
 
 #go-back {
