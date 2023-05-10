@@ -31,6 +31,7 @@ if (!controlsData) {
 
 
 const scoreEl = document.getElementById("score");
+const modal = document.getElementById("modal");
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -557,7 +558,13 @@ document.addEventListener("keydown", (e) => {
     // }
 
     if (key === "Escape") {
-        paused = !paused;
+        if (paused) {
+            modal.style.display = "none";
+            paused = false;
+        } else {
+            modal.style.display = "flex";
+            paused = true;
+        }
     }
 
     if (userInput && !paused) {
