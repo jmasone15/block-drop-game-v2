@@ -3,6 +3,7 @@ let userInput = false;
 let activeShape;
 let allRows = [];
 let shapes = [];
+let shapeCounter = 0;
 let score = 0;
 let hardDropped = false;
 let holdPiece;
@@ -459,7 +460,8 @@ const game = async (existing, existingBag, existingNextBag, index) => {
 
         // Set the current shape to the activeShape global variable and start the shape drop.
         if (!existing) {
-            shape.updateShapeId(shapes.length + 1);
+            shapeCounter++;
+            shape.updateShapeId(shapeCounter);
             activeShape = shape;
         }
         await shapeDrop();
