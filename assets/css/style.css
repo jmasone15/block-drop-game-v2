@@ -315,7 +315,7 @@ footer a {
     z-index: 2;
     position: fixed;
     top: 45%;
-    left: 48%;
+    left: 49%;
     color: #f8ff73;
     font-size: 50px;
 }
@@ -407,6 +407,43 @@ kbd:hover {
     position: fixed;
     top: 1%;
     right: 0;
+}
+
+.end-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    height: 80vh;
+    text-align: center;
+}
+
+.end-screen h1 {
+    font-size: 50px;
+
+}
+.end-screen h3 {
+    font-size: 30px;
+    margin-bottom: 50px;
+}
+
+#new-high-score {
+    margin-top: 0;
+    margin-bottom: 50px;
+    font-size: 25px;
+    color: #f8ff73;
+}
+
+.end-icon-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#final-score {
+    color: #f8ff73;
 }
 
 .display-none {

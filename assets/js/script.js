@@ -49,6 +49,11 @@ const goBackEl = document.getElementById("go-back");
 const keyIconEls = [...document.getElementsByTagName("kbd")];
 const copyrightEl = document.getElementById("copyright");
 const settingsInstrucEl = document.getElementById("settings-instructions");
+const playAgainEl = document.getElementById("play-again");
+const endScreenEl = document.getElementById("end-screen");
+const goBackEndEl= document.getElementById("go-back-end");
+const finalScoreEl = document.getElementById("final-score");
+const newHighScoreEl = document.getElementById("new-high-score");
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -111,6 +116,8 @@ const bagGeneration = () => {
 
 const endGame = async () => {
     gameStart = false;
+    userInput = false;
+
     await delay(250);
 
     // We want to delete all the rows incrementally, similar to how we populated boxes and rows one at a time.
@@ -124,6 +131,8 @@ const endGame = async () => {
         reversedAllRows[i].remove();
     }
 
+    await delay(500);
+
     // Remove elements from small side grids.
     await unPopulateGrid(5, 15, "next");
     await unPopulateGrid(5, 5, "hold");
@@ -131,7 +140,15 @@ const endGame = async () => {
     // Update high-score
     if (highScore === null || score > parseInt(highScore)) {
         localStorage.setItem("high-score", score);
+        newHighScoreEl.classList.remove("display-none");
+        finalScoreEl.parentElement.style.marginBottom = "10px";
     }
+
+    // Update UI
+    headerEl.classList.add("display-none");
+    wrapperEl.classList.add("display-none");
+    endScreenEl.classList.remove("display-none");
+    finalScoreEl.textContent = score;
 }
 
 const createShapeByColor = (color) => {
@@ -551,6 +568,24 @@ const updateControlKey = (key, element) => {
     element.innerHTML = keyText;
 }
 
+const resetGameVariables = () => {
+    activeShape = null;
+    shapes = [];
+    allRows = [];
+    shapeCounter = 0;
+    score = 0;
+    ghostDivs = [];
+    speedMS = 800;
+    clearedLinesCount = 0;
+    level = 1;
+    hold = false;
+    holdPiece = null;
+    hardDropped = false;
+    loopCount = 0;
+    incrementLoopCount = false;
+    highScoreEl.textContent = !highScore ? "" : highScore;
+}
+
 const game = async (existing, existingBag, existingNextBag, index) => {
     let currentBag, nextBag;
 
@@ -577,7 +612,6 @@ const game = async (existing, existingBag, existingNextBag, index) => {
             // If there is an obstruction for any box of the spawning shape, end the game.
             if (shapeId !== null) {
                 if (!existing && parseInt(shapeId) !== activeShape.shapeId) {
-                    userInput = false;
                     return endGame();
                 }
             }
@@ -656,6 +690,25 @@ const game = async (existing, existingBag, existingNextBag, index) => {
             i = -1;
         }
     }
+}
+const startGame = async () => {
+    headerEl.classList.remove("display-none");
+    wrapperEl.classList.remove("display-none");
+    newHighScoreEl.classList.add("display-none");
+
+
+    gameStart = true;
+
+    // Instead of coding 180 individual divs, figured it would look cool to populate them incrementally to simulate "loading up" on the old systems.
+    // Creates rows and divs for the game grid with a 10 ms delay between each to simulate loading effect.
+    await populateGrid(5, 15, "next");
+    await populateGrid(5, 5, "hold");
+    await populateGrid(10, 18, "game-box");
+
+    await countdown();
+
+    // Game Loop
+    await game();
 }
 
 // Event Listeners
@@ -744,45 +797,46 @@ document.addEventListener("keydown", (e) => {
 startBtnEl.addEventListener("click", async () => {
     highScoreEl.textContent = !highScore ? "" : highScore;
     startScreenEl.classList.add("display-none");
-    headerEl.classList.remove("display-none");
-    wrapperEl.classList.remove("display-none");
     copyrightEl.classList.add("display-none");
-    gameStart = true;
 
-    // Instead of coding 180 individual divs, figured it would look cool to populate them incrementally to simulate "loading up" on the old systems.
-    // Creates rows and divs for the game grid with a 10 ms delay between each to simulate loading effect.
-    await populateGrid(5, 15, "next");
-    await populateGrid(5, 5, "hold");
-    await populateGrid(10, 18, "game-box");
-
-    await countdown();
-
-    // Game Loop
-    await game();
+    return startGame();
 });
 settingsEl.addEventListener("click", () => {
     startScreenEl.classList.add("display-none");
     settingsScreenEl.classList.remove("display-none");
     goBackEl.classList.remove("display-none");
 });
-goBackEl.addEventListener("click", () => {
-    startScreenEl.classList.remove("display-none");
-    settingsScreenEl.classList.add("display-none");
-    goBackEl.classList.add("display-none");
+[goBackEl, goBackEndEl].forEach(icon => {
+  icon.addEventListener("click", () => {
+      if (icon.id === "go-back-end") {
+          resetGameVariables();
+      }
+
+      startScreenEl.classList.remove("display-none");
+      settingsScreenEl.classList.add("display-none");
+      goBackEl.classList.add("display-none");
+  });
 });
 keyIconEls.forEach(keyIcon => {
     keyIcon.addEventListener("click", () => {
-        keyIcon.classList.add("kbd-active");
-        changeControls = true
-        targetChangeIcon = keyIcon;
-        settingsInstrucEl.textContent = "Press any key..."
+        if (!changeControls) {
+            keyIcon.classList.add("kbd-active");
+            changeControls = true;
+            targetChangeIcon = keyIcon;
+            settingsInstrucEl.textContent = "Press any key...";
+        }
     });
-})
+});
+playAgainEl.addEventListener("click", () => {
+    endScreenEl.classList.add("display-none");
+    resetGameVariables();
+    return startGame();
+});
 
 onLoadUI();
 
 
 // TODO
-// Controls - rEFACTOR THE LOGIC FOR THIS
-// Rotate Start Screen Pieces
 // End Game
+// Rotate Start Screen Pieces
+// Performance Enhancements
