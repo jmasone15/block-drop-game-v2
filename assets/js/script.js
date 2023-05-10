@@ -39,6 +39,7 @@ const startBtnEl = document.getElementById("start");
 const startScreenEl = document.getElementById("start-screen");
 const headerEl = document.getElementById("header");
 const wrapperEl = document.getElementById("game");
+const countdownEl = document.getElementById("countdown");
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -472,6 +473,22 @@ const onLoadUI = () => {
     document.getElementById("copyright").innerHTML = `&copy; ${new Date().getFullYear()} Copyright: <a href="https://github.com/jmasone15" target="_blank"> Jordan Masone</a>`;
 }
 
+const countdown = async () => {
+    countdownEl.classList.remove("display-none");
+
+    for (let i = 3; i > -1; i--) {
+        if (i === 0) {
+            countdownEl.textContent = "Go!";
+        } else {
+            countdownEl.textContent = i;
+        }
+
+        await delay(1000);
+    }
+
+    countdownEl.classList.add("display-none");
+}
+
 const game = async (existing, existingBag, existingNextBag, index) => {
     let currentBag, nextBag;
 
@@ -653,9 +670,15 @@ startBtnEl.addEventListener("click", async () => {
     await populateGrid(5, 5, "hold");
     await populateGrid(10, 18, "game-box");
 
+    await countdown();
+
     // Game Loop
-    await delay(1000);
     await game();
 });
 
 onLoadUI();
+
+
+// TODO
+// Controls
+// End Game

@@ -310,3 +310,12 @@ footer a {
     text-decoration: none;
     color: white;
 }
+
+#countdown {
+    z-index: 2;
+    position: fixed;
+    top: 45%;
+    left: 48%;
+    color: #f8ff73;
+    font-size: 50px;
+}
