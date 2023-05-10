@@ -6,6 +6,7 @@
     <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/media-query.css">
+    <link href="https://cdn.jsdelivr.net/npm/@xiee/utils/css/key-buttons.min.css" rel="stylesheet">
 </head>
 <body>
 <div id="modal">
@@ -58,7 +59,42 @@
         <i id="settings" class="fa-solid fa-gear icon"></i>
     </div>
 </div>
+<div class="settings-screen display-none" id="settings-screen">
+    <div class="settings-wrapper">
+        <div id="left" class="key-setting">
+            <kbd>A</kbd>
+            <p>Move Left</p>
+        </div>
+        <div id="right" class="key-setting">
+            <kbd>A</kbd>
+            <p>Move Right</p>
+        </div>
+        <div id="soft-drop" class="key-setting">
+            <kbd>A</kbd>
+            <p>Soft Drop</p>
+        </div>
+    </div>
+    <div class="settings-wrapper">
+        <div id="hard-drop" class="key-setting">
+            <kbd>A</kbd>
+            <p>Hard Drop</p>
+        </div>
+        <div id="left-rotate" class="key-setting">
+            <kbd>A</kbd>
+            <p>Left Rotate</p>
+        </div>
+        <div id="right-rotate" class="key-setting">
+            <kbd>A</kbd>
+            <p>Right Rotate</p>
+        </div>
+        <div id="hold-piece" class="key-setting">
+            <kbd>A</kbd>
+            <p>Hold Piece</p>
+        </div>
+    </div>
+</div>
 <h1 id="countdown"></h1>
+<i id="go-back" class="display-none fa-solid fa-house icon icon-home"></i>
 <footer>
     <p id="copyright"></p>
 </footer>

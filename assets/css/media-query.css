@@ -1,4 +1,13 @@
 /* Width Re-size */
+@media screen and (max-width: 1200px) {
+    .settings-wrapper {
+        width: 800px;
+    }
+    .key-setting {
+        margin: 0 10px;
+    }
+}
+
 @media screen and (max-width: 1050px) {
     aside {
         display: none;

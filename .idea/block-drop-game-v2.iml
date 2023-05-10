@@ -9,5 +9,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="319698822a" level="application" />
+    <orderEntry type="library" name="@xiee/utils" level="application" />
   </component>
 </module>

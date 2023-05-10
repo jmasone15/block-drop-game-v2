@@ -158,10 +158,6 @@ section {
     color: white;
 }
 
-.display-none {
-    display: none;
-}
-
 .start-screen {
     display: flex;
     flex-direction: column;
@@ -191,6 +187,10 @@ section {
     margin-right: 20px;
     animation: fadeIn 5.4s;
     transition: all ease-in-out 0.2s;
+}
+
+.icon-home {
+    animation: none;
 }
 
 .icon:hover {
@@ -318,4 +318,86 @@ footer a {
     left: 48%;
     color: #f8ff73;
     font-size: 50px;
+}
+
+.settings-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 400px;
+    width: 100%;
+}
+
+.settings-screen h1 {
+    color: white;
+}
+
+.settings-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 1600px;
+    flex-wrap: wrap;
+    margin-bottom: 100px;
+}
+
+.key-setting {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 100px;
+}
+
+.key-setting p {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.key-setting div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.key-setting i:hover {
+    color: #f8ff73;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.key-image {
+    background-color: white;
+}
+
+kbd {
+    border: 2px solid white;
+    box-shadow: 3px 3px darkgrey !important;
+    font-size: 30px;
+    text-align: center;
+    display: inline-block;
+    font-weight: 600;
+    letter-spacing: .05em;
+    padding: 3px 5px;
+    white-space: nowrap;
+    height: 60px;
+    width: 60px;
+}
+
+kbd:hover {
+    color: #f8ff73;
+    box-shadow: 0 0 !important;;
+    border: 2px solid #f8ff73;
+    cursor: pointer;
+}
+
+#go-back {
+    position: fixed;
+    top: 1%;
+    right: 0;
+}
+
+.display-none {
+    display: none !important;
 }

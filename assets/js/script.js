@@ -40,6 +40,9 @@ const startScreenEl = document.getElementById("start-screen");
 const headerEl = document.getElementById("header");
 const wrapperEl = document.getElementById("game");
 const countdownEl = document.getElementById("countdown");
+const settingsEl = document.getElementById("settings");
+const settingsScreenEl = document.getElementById("settings-screen");
+const goBackEl = document.getElementById("go-back");
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -675,10 +678,21 @@ startBtnEl.addEventListener("click", async () => {
     // Game Loop
     await game();
 });
+settingsEl.addEventListener("click", () => {
+    startScreenEl.classList.add("display-none");
+    settingsScreenEl.classList.remove("display-none");
+    goBackEl.classList.remove("display-none");
+});
+goBackEl.addEventListener("click", () => {
+    startScreenEl.classList.remove("display-none");
+    settingsScreenEl.classList.add("display-none");
+    goBackEl.classList.add("display-none");
+});
 
 onLoadUI();
 
 
 // TODO
 // Controls
+// Rotate Start Screen Pieces
 // End Game
