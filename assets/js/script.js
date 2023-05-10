@@ -13,6 +13,7 @@ let clearedLinesCount = 0;
 let speedMS = 800;
 let loopCount = 0;
 let incrementLoopCount = false;
+let paused = false;
 let controlsData = JSON.parse(localStorage.getItem("blockGameControls"));
 
 if (!controlsData) {
@@ -178,7 +179,7 @@ const shapeDrop = async () => {
 
     // System should consistently drop the activeShape at a rate determined by the current game level.
     // System should stop dropping the piece once it hits a blocker, the user hard drops, or the user decides to hold the piece.
-    while (!hold && activeShape.canShapeMove(controlsData.softDropKey) && !hardDropped) {
+    while (!hold && activeShape.canShapeMove(controlsData.softDropKey) && !hardDropped && !paused) {
 
         // When holding a piece, there is a big delay if the speedMS is too high.
         // Split speedMS into quarters and check the hold after each one.
@@ -186,7 +187,7 @@ const shapeDrop = async () => {
 
         for (let i = 0; i < 4; i++) {
             await delay(quarterSpeed);
-            if (hold || hardDropped) {
+            if (hold || hardDropped || paused) {
                 return;
             }
         }
@@ -205,7 +206,7 @@ const shapeDrop = async () => {
     while (count <= loopCount && loopCount !== 0 && !hardDropped) {
         await delay(100);
         if (activeShape.canShapeMove(controlsData.softDropKey)) {
-            if (hold || hardDropped) {
+            if (hold || hardDropped || paused) {
                 return;
             }
             return shapeDrop();
@@ -420,12 +421,19 @@ const determineShadow = () => {
     });
 }
 
-const game = async () => {
-    // Want to generate current bag and next bag to display pieces in "Next" box
-    let currentBag = bagGeneration();
-    let nextBag = bagGeneration();
+const game = async (existing, existingBag, existingNextBag, index) => {
+    let currentBag, nextBag;
 
-    for (let i = 0; i < currentBag.length; i++) {
+    if (existing) {
+        currentBag = existingBag;
+        nextBag = existingNextBag;
+    } else {
+        // Want to generate current bag and next bag to display pieces in "Next" box
+        currentBag = bagGeneration();
+        nextBag = bagGeneration();
+    }
+
+    for (let i = existing ? index : 0; i < currentBag.length; i++) {
         let shape = currentBag[i];
 
         // Block out
@@ -433,23 +441,31 @@ const game = async () => {
             const { x, y } = shape.boxes[j];
             let targetRow = document.getElementById(`y${y}`);
             let targetBox = targetRow.children[x];
+            let shapeId = targetBox.getAttribute("shapeId");
+
 
             // If there is an obstruction for any box of the spawning shape, end the game.
-            if (targetBox.classList.length !== 1) {
-                userInput = false;
-                return endGame();
+            if (shapeId !== null) {
+                if (!existing && parseInt(shapeId) !== activeShape.shapeId) {
+                    userInput = false;
+                    return endGame();
+                }
             }
         }
 
         // Display the next shapes in the next sub-grid
         displayNextShapes(i, currentBag, nextBag);
 
-        // Increment shape counter and use that as the shapeId
-        shape.updateShapeId(shapes.length + 1);
-
         // Set the current shape to the activeShape global variable and start the shape drop.
-        activeShape = shape;
+        if (!existing) {
+            shape.updateShapeId(shapes.length + 1);
+            activeShape = shape;
+        }
         await shapeDrop();
+
+        if (existing) {
+            existing = false
+        }
 
         // The shapeDrop function will be cancelled if the user presses the hold piece key.
         if (hold) {
@@ -484,6 +500,14 @@ const game = async () => {
             newShape.populateShape(true, "hold");
 
             continue;
+        }
+
+        if (paused) {
+            while (paused) {
+                await delay(250);
+            }
+
+            return game(true, currentBag, nextBag, i)
         }
 
         // Update the game variables.
@@ -532,7 +556,11 @@ document.addEventListener("keydown", (e) => {
     //     modal.style.display = "none";
     // }
 
-    if (userInput) {
+    if (key === "Escape") {
+        paused = !paused;
+    }
+
+    if (userInput && !paused) {
         if ([leftMoveKey, rightMoveKey, softDropKey, hardDropKey].includes(key)) {
             // Need count of rows for updating score.
             const totalRows = activeShape.moveShape(key, true);
