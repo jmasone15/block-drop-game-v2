@@ -83,7 +83,7 @@ section {
 }
 
 .cell {
-    border: 1px solid red;
+    border: 1px solid transparent;
 }
 
 .small-grid {
@@ -93,7 +93,7 @@ section {
 }
 
 .small-cell {
-    border: 1px solid red;
+    border: 1px solid transparent;
 }
 
 .red {
