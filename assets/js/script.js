@@ -52,13 +52,14 @@ const copyrightEl = document.getElementById("copyright");
 const settingsInstrucEl = document.getElementById("settings-instructions");
 const playAgainEl = document.getElementById("play-again");
 const endScreenEl = document.getElementById("end-screen");
-const goBackEndEl= document.getElementById("go-back-end");
+const goBackEndEl = document.getElementById("go-back-end");
 const finalScoreEl = document.getElementById("final-score");
 const newHighScoreEl = document.getElementById("new-high-score");
+const gameBox = document.getElementById("game-box");
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-const populateGrid = async(xCount, yCount, gridId) => {
+const populateGrid = async (xCount, yCount, gridId) => {
     const isGameBox = gridId === "game-box";
 
     for (let i = 0; i < yCount; i++) {
@@ -78,7 +79,7 @@ const populateGrid = async(xCount, yCount, gridId) => {
     }
 }
 
-const unPopulateGrid = async(xCount, yCount, gridId) => {
+const unPopulateGrid = async (xCount, yCount, gridId) => {
     for (let i = yCount - 1; i > -1; i--) {
         const row = document.getElementById(`${gridId}-y${i}`);
 
@@ -121,6 +122,10 @@ const endGame = async () => {
 
     await delay(250);
 
+    const gameBoxStyles = getComputedStyle(gameBox)
+    gameBox.style.height = gameBoxStyles.height;
+    gameBox.style.width = gameBoxStyles.width;
+
     // We want to delete all the rows incrementally, similar to how we populated boxes and rows one at a time.
     // Remove divs from rows in reverse order and then remove the rows once they are empty to not mess with UI.
     const reversedAllRows = allRows.reverse();
@@ -150,6 +155,9 @@ const endGame = async () => {
     wrapperEl.classList.add("display-none");
     endScreenEl.classList.remove("display-none");
     finalScoreEl.textContent = score;
+
+    gameBox.style.height = null;
+    gameBox.style.width = null;
 }
 
 const createShapeByColor = (color) => {
@@ -209,7 +217,7 @@ const displayNextShapes = (i, currentBag, nextBag) => {
     }
 
     [shape1, shape2, shape3].forEach((shape, index) => {
-       let newShape = createShapeByColor(shape.color);
+        let newShape = createShapeByColor(shape.color);
 
         if (index === 1) {
             newShape.resetShape(2, 6);
@@ -449,7 +457,7 @@ const determineShadow = () => {
     while (true) {
         let canMove = true;
 
-        activeShape.boxes.forEach(({x, y}) => {
+        activeShape.boxes.forEach(({ x, y }) => {
             let targetX = x;
             let targetY = y + count;
 
@@ -477,10 +485,10 @@ const determineShadow = () => {
         }
     }
 
-    activeShape.boxes.forEach(({x, y}) => {
-       let row = document.getElementById(`y${y + count}`);
-       row.children[x].style.borderColor = "white";
-       ghostDivs.push(row.children[x])
+    activeShape.boxes.forEach(({ x, y }) => {
+        let row = document.getElementById(`y${y + count}`);
+        row.children[x].style.borderColor = "white";
+        ghostDivs.push(row.children[x])
     });
 }
 
@@ -694,6 +702,26 @@ const game = async (existing, existingBag, existingNextBag, index) => {
         }
     }
 }
+
+const calculateCellSize = (target) => {
+    let multiplier = 0.8;
+    if (window.innerHeight < 800) {
+        multiplier = 0.75
+    } else if (window.innerHeight < 650) {
+        multiplier - 0.7
+    }
+
+    let calculatedCellSize = ((window.innerHeight * multiplier) / 18);
+
+    if (target === "small-cell") {
+        calculatedCellSize = calculatedCellSize / 1.5
+    }
+
+    [...document.getElementsByClassName(target)].forEach(box => {
+        box.setAttribute("style", `height: ${calculatedCellSize}px; width: ${calculatedCellSize}px;`)
+    });
+}
+
 const startGame = async () => {
     headerEl.classList.remove("display-none");
     wrapperEl.classList.remove("display-none");
@@ -707,6 +735,9 @@ const startGame = async () => {
     await populateGrid(5, 15, "next");
     await populateGrid(5, 5, "hold");
     await populateGrid(10, 18, "game-box");
+
+    calculateCellSize("cell");
+    calculateCellSize("small-cell");
 
     await countdown();
 
@@ -810,16 +841,16 @@ settingsEl.addEventListener("click", () => {
     goBackEl.classList.remove("display-none");
 });
 [goBackEl, goBackEndEl].forEach(icon => {
-  icon.addEventListener("click", () => {
-      if (icon.id === "go-back-end") {
-          resetGameVariables();
-      }
+    icon.addEventListener("click", () => {
+        if (icon.id === "go-back-end") {
+            resetGameVariables();
+        }
 
-      endScreenEl.classList.add("display-none");
-      startScreenEl.classList.remove("display-none");
-      settingsScreenEl.classList.add("display-none");
-      goBackEl.classList.add("display-none");
-  });
+        endScreenEl.classList.add("display-none");
+        startScreenEl.classList.remove("display-none");
+        settingsScreenEl.classList.add("display-none");
+        goBackEl.classList.add("display-none");
+    });
 });
 keyIconEls.forEach(keyIcon => {
     keyIcon.addEventListener("click", () => {
@@ -835,6 +866,11 @@ playAgainEl.addEventListener("click", () => {
     endScreenEl.classList.add("display-none");
     resetGameVariables();
     return startGame();
+});
+window.addEventListener("resize", () => {
+    console.log("Test");
+    calculateCellSize("cell");
+    calculateCellSize("small-cell");
 });
 
 onLoadUI();

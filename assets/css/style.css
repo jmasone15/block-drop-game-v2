@@ -20,38 +20,31 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 98vh;
-    width: 98vw;
-    position: relative;
 }
 
 #game-box {
     border: 2px solid white;
     border-radius: 15px;
-    height: 1063px;
-    width: 590px;
     background-color: #0d1a47;
     overflow: hidden;
+    padding: 2px;
 }
 
 main {
     text-align: center;
-    margin-bottom: 100px;
 }
 
 header {
     display: flex;
     justify-content: center;
     margin-bottom: 0;
-    font-size: 18px;
-    width: 98vw;
 }
 
 .header-class {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 800px;
+    width: 50vw;
     color: white;
     text-align: center;
 }
@@ -65,6 +58,7 @@ header {
     margin-top: 0;
     font-size: 15px;
     color: #f8ff73;
+    margin-bottom: 10px;
 }
 
 aside {
@@ -89,21 +83,17 @@ section {
 }
 
 .cell {
-    height: 57px;
-    width: 57px;
-    border: 1px solid transparent;
+    border: 1px solid red;
 }
 
 .small-grid {
     border: 2px solid white;
     border-radius: 0 0 15px 15px ;
-    padding: 5px;
+    padding: 3px;
 }
 
 .small-cell {
-    height: 28px;
-    width: 28px;
-    border: 1px solid transparent;
+    border: 1px solid red;
 }
 
 .red {
