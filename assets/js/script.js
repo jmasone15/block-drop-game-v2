@@ -28,10 +28,10 @@ if (!controlsData) {
         rightMoveKey: "ArrowRight",
         softDropKey: "ArrowDown",
         hardDropKey: "ArrowUp",
-        holdPieceKey: "TAB",
+        holdPieceKey: "Tab",
         leftRotateKey: "1",
         rightRotateKey: "2"
-    }
+    };
     localStorage.setItem("blockGameControls", JSON.stringify(controlsData));
 }
 
@@ -57,7 +57,7 @@ const finalScoreEl = document.getElementById("final-score");
 const newHighScoreEl = document.getElementById("new-high-score");
 const gameBox = document.getElementById("game-box");
 
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const populateGrid = async (xCount, yCount, gridId) => {
     const isGameBox = gridId === "game-box";
@@ -74,10 +74,10 @@ const populateGrid = async (xCount, yCount, gridId) => {
         for (let j = 0; j < xCount; j++) {
             const div = document.createElement("div");
             div.classList.add(isGameBox ? "cell" : "small-cell");
-            section.appendChild(div)
+            section.appendChild(div);
         }
     }
-}
+};
 
 const unPopulateGrid = async (xCount, yCount, gridId) => {
     for (let i = yCount - 1; i > -1; i--) {
@@ -89,7 +89,7 @@ const unPopulateGrid = async (xCount, yCount, gridId) => {
 
         row.remove();
     }
-}
+};
 
 const durstendfeldShuffle = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
@@ -99,8 +99,8 @@ const durstendfeldShuffle = (array) => {
         array[j] = temp;
     }
 
-    return array
-}
+    return array;
+};
 
 const bagGeneration = () => {
     let pieces = [new I(5, 0), new J(5, 0), new L(5, 0), new O(5, 0), new S(5, 0), new T(5, 0), new Z(5, 0)];
@@ -113,8 +113,8 @@ const bagGeneration = () => {
         pieces[j] = temp;
     }
 
-    return pieces
-}
+    return pieces;
+};
 
 const endGame = async () => {
     gameStart = false;
@@ -122,7 +122,7 @@ const endGame = async () => {
 
     await delay(250);
 
-    const gameBoxStyles = getComputedStyle(gameBox)
+    const gameBoxStyles = getComputedStyle(gameBox);
     gameBox.style.height = gameBoxStyles.height;
     gameBox.style.width = gameBoxStyles.width;
 
@@ -132,7 +132,7 @@ const endGame = async () => {
     for (let i = 0; i < reversedAllRows.length; i++) {
         for (let j = 9; j > -1; j--) {
             reversedAllRows[i].children[j].remove();
-            await delay(10)
+            await delay(10);
         }
         reversedAllRows[i].remove();
     }
@@ -158,7 +158,7 @@ const endGame = async () => {
 
     gameBox.style.height = null;
     gameBox.style.width = null;
-}
+};
 
 const createShapeByColor = (color) => {
     switch (color) {
@@ -177,7 +177,7 @@ const createShapeByColor = (color) => {
         default:
             return new J();
     }
-}
+};
 
 const displayNextShapes = (i, currentBag, nextBag) => {
     // Clear existing shapes
@@ -209,7 +209,6 @@ const displayNextShapes = (i, currentBag, nextBag) => {
                 shape3 = nextBag[2];
                 break;
         }
-
     } else {
         shape1 = currentBag[i + 1];
         shape2 = currentBag[i + 2];
@@ -229,7 +228,7 @@ const displayNextShapes = (i, currentBag, nextBag) => {
 
         newShape.populateShape(true, "next");
     });
-}
+};
 
 const shapeDrop = async () => {
     // Update the game variables
@@ -241,7 +240,6 @@ const shapeDrop = async () => {
     // System should consistently drop the activeShape at a rate determined by the current game level.
     // System should stop dropping the piece once it hits a blocker, the user hard drops, or the user decides to hold the piece.
     while (!hold && activeShape.canShapeMove(controlsData.softDropKey) && !hardDropped && !paused) {
-
         // When holding a piece, there is a big delay if the speedMS is too high.
         // Split speedMS into quarters and check the hold after each one.
         let quarterSpeed = Math.floor(speedMS / 4);
@@ -273,7 +271,7 @@ const shapeDrop = async () => {
             }
             return shapeDrop();
         }
-        count++
+        count++;
     }
 
     // Update Game Variables
@@ -282,15 +280,15 @@ const shapeDrop = async () => {
 
     // Update shape's focalBox x and y coordinates.
     let focalBoxIndex = activeShape.getFocalIndex();
-    activeShape.x = activeShape.boxes[focalBoxIndex].x
-    activeShape.y = activeShape.boxes[focalBoxIndex].y
-}
+    activeShape.x = activeShape.boxes[focalBoxIndex].x;
+    activeShape.y = activeShape.boxes[focalBoxIndex].y;
+};
 
 const updateLevel = () => {
-    const lineTarget = Math.min(100, (level * 10) + 1);
+    const lineTarget = Math.min(100, level * 10 + 1);
 
     if (clearedLinesCount >= lineTarget) {
-        level++
+        level++;
 
         // To calculate the milliseconds between piece auto-drop, there were some calculations I did on my end to keep it accurate to the original system.
         // Per the Tetris wikipedia, piece drop speed is determined by how many frames between piece drop (level 1 is 48 frames).
@@ -339,7 +337,7 @@ const updateLevel = () => {
 
         document.getElementById("level").textContent = `Level: ${level}`;
     }
-}
+};
 
 const clearRows = async () => {
     let clearedRows = [];
@@ -347,7 +345,7 @@ const clearRows = async () => {
 
     // Grab the unique y values from the activeShape's boxes.
     // Check to see if a row was cleared by any of those boxes.
-    activeShape.boxes.forEach(box => {
+    activeShape.boxes.forEach((box) => {
         // Only check unique rows.
         if (!targetYRows.includes(box.y)) {
             const targetY = box.y;
@@ -356,18 +354,16 @@ const clearRows = async () => {
             const childDivs = [...row.children];
 
             // If row is completely full...
-            if (childDivs.every(div => div.classList.length !== 1)) {
-
+            if (childDivs.every((div) => div.classList.length !== 1)) {
                 // Update the array variables.
                 clearedRows.push(targetY);
                 targetYRows.push(targetY);
 
                 // Clear all divs within row.
-                childDivs.forEach(div => {
+                childDivs.forEach((div) => {
                     div.setAttribute("class", "cell");
                     div.removeAttribute("shapeId");
                 });
-
             }
         }
     });
@@ -379,11 +375,11 @@ const clearRows = async () => {
         // Filter out shapes that have had all of their boxes deleted.
         // Update remaining shapes with remaining boxes.
         let filteredShapes = [];
-        shapes.forEach(shape => {
-            const filteredBoxes = shape.boxes.filter(box => !clearedRows.includes(box.y));
+        shapes.forEach((shape) => {
+            const filteredBoxes = shape.boxes.filter((box) => !clearedRows.includes(box.y));
 
             if (filteredBoxes.length !== 0) {
-                shape.boxes = filteredBoxes
+                shape.boxes = filteredBoxes;
                 filteredShapes.push(shape);
             }
         });
@@ -391,24 +387,20 @@ const clearRows = async () => {
 
         // Loop over all rows in reverse order (except the bottom one)
         for (let i = 16; i > -1; i--) {
-
             // If the row loop is not a cleared row...
             if (!clearedRows.includes(i)) {
                 // For each box on the board, we want to drop it the appropriate amount based on lines cleared below it.
                 shapes.forEach(({ boxes }) => {
                     boxes.forEach((box) => {
                         if (box.y === i) {
-
                             // Drop the box based on how many lines were cleared below it.
                             box.updateDom(false);
-                            box.y += clearedRows.filter(num => num > i).length;
+                            box.y += clearedRows.filter((num) => num > i).length;
                             box.updateDom(true);
-
                         }
                     });
                 });
             }
-
         }
 
         // Update score based on number of lines cleared
@@ -416,16 +408,16 @@ const clearRows = async () => {
         let levelMod = level === 0 ? 1 : level;
         switch (clearedRows.length) {
             case 4:
-                mod = 800
+                mod = 800;
                 break;
             case 3:
-                mod = 500
+                mod = 500;
                 break;
             case 2:
-                mod = 300
+                mod = 300;
                 break;
             default:
-                mod = 100
+                mod = 100;
                 break;
         }
 
@@ -438,7 +430,7 @@ const clearRows = async () => {
         // Update the game level based on rows cleared
         return updateLevel();
     }
-}
+};
 
 const updateScore = (amount) => {
     score += amount;
@@ -447,7 +439,7 @@ const updateScore = (amount) => {
     if (score > highScore) {
         highScoreEl.textContent = `New Best! ${score}`;
     }
-}
+};
 
 const determineShadow = () => {
     // Reset Shadow
@@ -478,9 +470,9 @@ const determineShadow = () => {
         });
 
         if (canMove) {
-            count++
+            count++;
         } else {
-            count--
+            count--;
             break;
         }
     }
@@ -488,16 +480,16 @@ const determineShadow = () => {
     activeShape.boxes.forEach(({ x, y }) => {
         let row = document.getElementById(`y${y + count}`);
         row.children[x].style.borderColor = "white";
-        ghostDivs.push(row.children[x])
+        ghostDivs.push(row.children[x]);
     });
-}
+};
 
 const resetShadow = () => {
-    ghostDivs.forEach(cell => {
-        cell.style.borderColor = "transparent"
+    ghostDivs.forEach((cell) => {
+        cell.style.borderColor = "transparent";
     });
     ghostDivs = [];
-}
+};
 
 const onLoadUI = () => {
     let randomArrayOne = durstendfeldShuffle([1, 2, 3, 4, 5, 6, 7]);
@@ -511,9 +503,9 @@ const onLoadUI = () => {
     copyrightEl.innerHTML = `&copy; ${new Date().getFullYear()} Copyright: <a href="https://github.com/jmasone15" target="_blank"> Jordan Masone</a>`;
 
     for (const control in controlsData) {
-        updateControlKey(controlsData[control], document.getElementById(control))
+        updateControlKey(controlsData[control], document.getElementById(control));
     }
-}
+};
 
 const countdown = async () => {
     countdownEl.classList.remove("display-none");
@@ -529,47 +521,47 @@ const countdown = async () => {
     }
 
     countdownEl.classList.add("display-none");
-}
+};
 
 const updateControlKey = (key, element) => {
     let keyText = key;
 
     if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(keyText)) {
         switch (keyText) {
-            case ("ArrowLeft"):
-                keyText = "&larr;"
+            case "ArrowLeft":
+                keyText = "&larr;";
                 break;
-            case ("ArrowUp"):
-                keyText = "&uarr;"
+            case "ArrowUp":
+                keyText = "&uarr;";
                 break;
-            case ("ArrowRight"):
-                keyText = "&rarr;"
+            case "ArrowRight":
+                keyText = "&rarr;";
                 break;
             default:
-                keyText = "&darr;"
+                keyText = "&darr;";
                 break;
         }
     } else if (["Control", "Shift", "Backspace", "Enter", "CapsLock", "Alt", "Space"].includes(keyText)) {
         element.classList.add("kbd-small-text");
 
         switch (keyText) {
-            case ("Control"):
-                keyText = "CTRL"
+            case "Control":
+                keyText = "CTRL";
                 break;
-            case ("Shift"):
-                keyText = "SHIFT"
+            case "Shift":
+                keyText = "SHIFT";
                 break;
-            case ("Backspace"):
-                keyText = "BACK"
+            case "Backspace":
+                keyText = "BACK";
                 break;
-            case ("Enter"):
-                keyText = "ENTER"
+            case "Enter":
+                keyText = "ENTER";
                 break;
-            case ("Space"):
-                keyText = "SPACE"
+            case "Space":
+                keyText = "SPACE";
                 break;
             default:
-                keyText = "CAPS"
+                keyText = "CAPS";
                 break;
         }
     } else {
@@ -577,7 +569,7 @@ const updateControlKey = (key, element) => {
     }
 
     element.innerHTML = keyText;
-}
+};
 
 const resetGameVariables = () => {
     activeShape = null;
@@ -595,7 +587,7 @@ const resetGameVariables = () => {
     loopCount = 0;
     incrementLoopCount = false;
     highScoreEl.textContent = !highScore ? "" : highScore;
-}
+};
 
 const game = async (existing, existingBag, existingNextBag, index) => {
     let currentBag, nextBag;
@@ -619,7 +611,6 @@ const game = async (existing, existingBag, existingNextBag, index) => {
             let targetBox = targetRow.children[x];
             let shapeId = targetBox.getAttribute("shapeId");
 
-
             // If there is an obstruction for any box of the spawning shape, end the game.
             if (shapeId !== null) {
                 if (!existing && parseInt(shapeId) !== activeShape.shapeId) {
@@ -640,7 +631,7 @@ const game = async (existing, existingBag, existingNextBag, index) => {
         await shapeDrop();
 
         if (existing) {
-            existing = false
+            existing = false;
         }
 
         // The shapeDrop function will be cancelled if the user presses the hold piece key.
@@ -683,7 +674,7 @@ const game = async (existing, existingBag, existingNextBag, index) => {
                 await delay(250);
             }
 
-            return game(true, currentBag, nextBag, i)
+            return game(true, currentBag, nextBag, i);
         }
 
         // Update the game variables.
@@ -701,32 +692,31 @@ const game = async (existing, existingBag, existingNextBag, index) => {
             i = -1;
         }
     }
-}
+};
 
 const calculateCellSize = (target) => {
     let multiplier = 0.8;
     if (window.innerHeight < 800) {
-        multiplier = 0.75
+        multiplier = 0.75;
     } else if (window.innerHeight < 650) {
-        multiplier - 0.7
+        multiplier - 0.7;
     }
 
-    let calculatedCellSize = ((window.innerHeight * multiplier) / 18);
+    let calculatedCellSize = (window.innerHeight * multiplier) / 18;
 
     if (target === "small-cell") {
-        calculatedCellSize = calculatedCellSize / 1.5
+        calculatedCellSize = calculatedCellSize / 1.5;
     }
 
-    [...document.getElementsByClassName(target)].forEach(box => {
-        box.setAttribute("style", `height: ${calculatedCellSize}px; width: ${calculatedCellSize}px;`)
+    [...document.getElementsByClassName(target)].forEach((box) => {
+        box.setAttribute("style", `height: ${calculatedCellSize}px; width: ${calculatedCellSize}px;`);
     });
-}
+};
 
 const startGame = async () => {
     headerEl.classList.remove("display-none");
     wrapperEl.classList.remove("display-none");
     newHighScoreEl.classList.add("display-none");
-
 
     gameStart = true;
 
@@ -743,11 +733,13 @@ const startGame = async () => {
 
     // Game Loop
     await game();
-}
+};
 
 // Event Listeners
 document.addEventListener("keydown", (e) => {
     e.preventDefault();
+
+    console.log(e.key);
 
     // Key the user pressed
     let key = e.key === " " ? "Space" : e.key;
@@ -808,14 +800,13 @@ document.addEventListener("keydown", (e) => {
                 userInput = false;
                 loopCount = 0;
             } else if (incrementLoopCount && loopCount < 10) {
-                loopCount++
+                loopCount++;
             }
 
             // Increment score
             if (totalRows !== 0) {
                 updateScore(totalRows);
             }
-
         } else if ([leftRotateKey, rightRotateKey].includes(key)) {
             // Rotate piece
             activeShape.rotatePiece(key === leftRotateKey ? 1 : 2);
@@ -840,7 +831,7 @@ settingsEl.addEventListener("click", () => {
     settingsScreenEl.classList.remove("display-none");
     goBackEl.classList.remove("display-none");
 });
-[goBackEl, goBackEndEl].forEach(icon => {
+[goBackEl, goBackEndEl].forEach((icon) => {
     icon.addEventListener("click", () => {
         if (icon.id === "go-back-end") {
             resetGameVariables();
@@ -852,7 +843,7 @@ settingsEl.addEventListener("click", () => {
         goBackEl.classList.add("display-none");
     });
 });
-keyIconEls.forEach(keyIcon => {
+keyIconEls.forEach((keyIcon) => {
     keyIcon.addEventListener("click", () => {
         if (!changeControls) {
             keyIcon.classList.add("kbd-active");
@@ -868,7 +859,6 @@ playAgainEl.addEventListener("click", () => {
     return startGame();
 });
 window.addEventListener("resize", () => {
-    console.log("Test");
     calculateCellSize("cell");
     calculateCellSize("small-cell");
 });
